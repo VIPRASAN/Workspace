@@ -77,7 +77,9 @@ folders:
 #   - zend
 sites:
     - map: phalcon.dev
-      to:  /home/vagrant/developmentVM/www/phalcon/public
+      to:  /home/vagrant/vspprojects/FarmLedger/Web/public
+    - map: api.phalcon.dev
+      to:  /home/vagrant/vspprojects/FarmLedger/Api
 
 databases:
     - phalcondb
