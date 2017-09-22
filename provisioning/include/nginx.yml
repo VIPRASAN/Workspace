@@ -1,0 +1,59 @@
+---
+- name: Ensure variables directory exists
+  file:
+    path: /etc/nginx/variables
+    state: directory
+    owner: root
+    group: root
+    mode: "u=rwx,g=rx,o=rx"
+
+- name: Remove the old nginx sites configuration and variables
+  file:
+    path: "/etc/nginx/{{ item }}/*"
+    state: absent
+  with_items:
+    - variables
+    - sites-enabled
+    - sites-available
+
+- name: Create per site nginx configuration
+  template:
+    src: "nginx/{{ item.type | default('phalcon') }}.conf.j2"
+    dest: "/etc/nginx/sites-available/{{ item.map }}.conf"
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+  vars:
+    server_name: "{{ item.map }}"
+    http_port: "{{ item.port | default('80') }}"
+    ssl_port: "{{ item.ssl | default('443') }}"
+    document_root: "{{ item.to }}"
+  with_items: "{{ settings.sites | default([]) }}"
+
+- name: Create per site variables file
+  template:
+    src: "variables.conf.j2"
+    dest: "/etc/nginx/variables/{{ item.map }}.conf"
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+  with_items: "{{ settings.sites | default([]) }}"
+
+- name: Inject per site variables
+  include: variables.yml
+  with_items: "{{ settings.sites }}"
+
+- name: Enable site
+  file:
+    src: "/etc/nginx/sites-available/{{ item.map }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ item.map }}.conf"
+    owner: root
+    group: root
+    state: link
+    mode: "u=rw,g=r,o=r"
+  with_items: "{{ settings.sites | default([]) }}"
+
+- name: Restart nginx service
+  service:
+    name: nginx
+    state: restarted

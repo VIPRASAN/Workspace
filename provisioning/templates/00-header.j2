@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# {{ ansible_managed }}
+
+read -d '' banner <<"BLOCK"
+    Thank you for using Phalcon Box!
+    We hope that Phalcon Box helps to make your life easier.
+
+    In case of problems:    https://github.com/phalcon/box/issues
+    Questions should go to: https://forum.phalconphp.com
+    Documentation:          https://docs.phalconphp.com
+BLOCK
+
+printf "\n"
+printf "    Welcome to Phalcon Box\n"
+printf "\n"
+printf "    %s" "$banner"
+printf "\n\n"
+
