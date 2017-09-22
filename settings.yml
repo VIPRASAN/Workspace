@@ -48,10 +48,8 @@ keys:
     - ~/.ssh/id_rsa
 
 folders:
-    - map: ~/workspace
-      to: /home/vagrant/workspace
-    - map: ~/vspprojects/developmentVM
-      to: /home/vagrant/developmentVM
+    - map: ~/vspprojects
+      to: /home/vagrant/vspprojects
 
 # Sites configuration.
 #
